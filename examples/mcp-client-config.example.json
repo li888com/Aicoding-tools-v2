@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "mcp-toolbox": {
+      "command": "node",
+      "args": [
+        "/Users/dubo/Documents/sbt/sl/mcp/dist/index.js"
+      ],
+      "env": {
+        "MYSQL_HOST": "127.0.0.1",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "ai_coding",
+        "MYSQL_PASSWORD": "ai_coding_pass",
+        "MYSQL_DATABASE": "ai_coding_stats",
+        "FEISHU_APP_ID": "cli_xxx",
+        "FEISHU_APP_SECRET": "replace-with-your-secret",
+        "FEISHU_BASE_URL": "https://open.feishu.cn"
+      }
+    }
+  }
+}

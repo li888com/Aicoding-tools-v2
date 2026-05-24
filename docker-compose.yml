@@ -1,0 +1,45 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: ai-coding-stats-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_DATABASE: ai_coding_stats
+      MYSQL_USER: ai_coding
+      MYSQL_PASSWORD: ai_coding_pass
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  dashboard:
+    build: .
+    container_name: ai-coding-stats-dashboard
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: "3306"
+      MYSQL_USER: ai_coding
+      MYSQL_PASSWORD: ai_coding_pass
+      MYSQL_DATABASE: ai_coding_stats
+      DASHBOARD_HOST: 0.0.0.0
+      DASHBOARD_PORT: "3000"
+      DASHBOARD_USERNAME: ${DASHBOARD_USERNAME:-admin}
+      DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD:-change-me}
+      DASHBOARD_SESSION_SECRET: ${DASHBOARD_SESSION_SECRET:-replace-with-a-long-random-secret}
+    ports:
+      - "3000:3000"
+
+volumes:
+  mysql-data:
